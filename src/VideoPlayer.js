@@ -9,6 +9,7 @@ const VideoPlayer = () => {
     const [videoMetadata, setVideoMetadata] = useState({});
     // eslint-disable-next-line
     const [waveSurfer, setWaveSurfer] = useState(null);
+    const [hasAudio, setHasAudio] = useState(true);
 
     
     const handleFileChange = (event) => {
@@ -56,6 +57,8 @@ const VideoPlayer = () => {
                 videoWidth: e.target.videoWidth,
                 videoHeight: e.target.videoHeight,
             });
+            // Check if the video has audio tracks
+            setHasAudio(e.target.mozHasAudio || Boolean(e.target.webkitAudioDecodedByteCount) || Boolean(e.target.audioTracks && e.target.audioTracks.length > 0));
         };
 
         if (videoFile) {
@@ -85,24 +88,23 @@ const VideoPlayer = () => {
             <div className='p-5 h-screen flex flex-col items-center justify-center w-2/3'>
                 <div className="flex flex-row justify-center items-center w-2/3">
 
-                    <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                    <div className=" flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2">
                         <div className="text-center">
-                            <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                            <div className=" flex text-sm leading-6 text-gray-600">
                                 <label
                                     htmlFor="file-upload"
                                     className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                 >
-                                    <span>Upload a file</span>
+                                    <span>Video Input</span>
                                     <input id="file-upload" name="file-upload" type="file" accept="video/*" onChange={handleFileChange} className="sr-only" />
                                 </label>
-                                <p className="pl-1">or drag and drop</p>
+                                
                             </div>
-                            <p className="text-xs leading-5 text-gray-600">Any Video File (.mp4)</p>
                         </div>
                     </div>
                 </div>
 
-                <canvas className='border-2 border-gray-400 w-2/3 m-5' ref={canvasRef} width="640" height="360" onClick={togglePlay} />
+                <canvas className='border-2 border-gray-400 w-2/3 m-5 rounded-sm' ref={canvasRef} width="640" height="360" onClick={togglePlay} />
                 {videoFile && (
                     <video
                         ref={videoRef}
@@ -111,7 +113,7 @@ const VideoPlayer = () => {
                         style={{ display: 'none' }}
                     />
                 )}
-                <div className='border-2 border-gray-400 w-2/3 m-5' id="waveform"></div>
+                <div className='border-2 border-gray-400 w-2/3 m-5 rounded-sm' id="waveform"></div>
                 <button className='bg-blue-600 text-white px-4 rounded py-1' onClick={togglePlay}>{isPlaying ? 'Pause' : 'Play'}</button>
                 <br />
             </div>
